@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Créer Tache</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script>
+    function addTask() {
+      const taskContainer = document.getElementById('tasks-container');
+      const taskIndex = taskContainer.children.length;
+      const newTask = document.createElement('div');
+      newTask.classList.add('form-group');
+      newTask.innerHTML = `
+        <label for="title-${taskIndex}">Title</label>
+        <input type="text" class="form-control" id="title-${taskIndex}" name="tasks[${taskIndex}][title]" required>
+        <label for="description-${taskIndex}">Description</label>
+        <textarea class="form-control" id="description-${taskIndex}" name="tasks[${taskIndex}][description]" rows="3" required></textarea>
+      `;
+      taskContainer.appendChild(newTask);
+    }
+  </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Créer une nouvelle liste de tâches</h1>
+        <form action="http://localhost:5000/api/taches/batch" method="POST">
+          <div id="tasks-container">
+            <div class="form-group">
+              <label for="title-0">Title</label>
+              <input type="text" class="form-control" id="title-0" name="tasks[0][title]" required>
+              <label for="description-0">Description</label>
+              <textarea class="form-control" id="description-0" name="tasks[0][description]" rows="3" required></textarea>
+            </div>
+          </div>
+          <button type="button" class="btn btn-secondary" onclick="addTask()">Ajouter la tâche</button>
+          <button type="submit" class="btn btn-primary">Créer la liste de tâches</button>
+        </form>
+      </div>
+</body>
+</html>

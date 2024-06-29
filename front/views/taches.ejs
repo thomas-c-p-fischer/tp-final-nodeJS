@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Liste des tâches</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center">Liste des tâches</h1>
+    <ul id="tache-list" class="list-group mt-4"></ul>
+    <div class="text-center mt-4">
+      <a href="/" class="btn btn-secondary">Retour à l'accueil</a>
+    </div>
+  </div>
+
+  <script>
+    fetch('http://localhost:5000/api/taches')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Données reçues:', data);
+        const tacheList = document.getElementById('tache-list');
+        if (data.length === 0) {
+          const li = document.createElement('li');
+          li.textContent = 'Aucune tâche trouvée.';
+          li.classList.add('list-group-item');
+          tacheList.appendChild(li);
+        } else {
+          data.forEach(tache => {
+            const li = document.createElement('li');
+            li.classList.add('list-group-item');
+            li.textContent = tache.title;
+            li.onclick = () => window.location.href = `/taches/${tache._id}`;
+            tacheList.appendChild(li);
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Erreur lors de la récupération des tâches:', error);
+      });
+  </script>
+</body>
+</html>
+

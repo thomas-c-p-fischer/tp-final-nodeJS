@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Détails de la tâche</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 id="tache-title" class="text-center"></h1>
+    <p id="tache-description" class="text-center"></p>
+    <div class="text-center mt-4">
+      <label>
+        Complété :
+        <input type="checkbox" id="tache-completed">
+      </label>
+    </div>
+    <div class="text-center mt-4">
+      <button class="btn btn-success" onclick="updateTache()">Mettre à jour</button>
+      <button class="btn btn-danger ml-2" onclick="deleteTache()">Supprimer</button>
+      <a href="/taches" class="btn btn-secondary ml-2">Retour à la liste des tâches</a>
+    </div>
+  </div>
+
+  <script>
+    const tacheId = window.location.pathname.split('/')[2];
+
+    fetch(`/api/taches/${tacheId}`)
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('tache-title').textContent = data.title;
+        document.getElementById('tache-description').textContent = data.description;
+        document.getElementById('tache-completed').checked = data.completed;
+      });
+
+    function updateTache() {
+      fetch(`/api/taches/${tacheId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          completed: document.getElementById('tache-completed').checked
+        })
+      }).then(response => response.json())
+        .then(data => {
+          alert('Tâche mise à jour');
+          window.location.href = `/taches/${tacheId}`;
+        });
+    }
+
+    function deleteTache() {
+      fetch(`/api/taches/${tacheId}`, {
+        method: 'DELETE'
+      }).then(() => {
+        alert('Tâche supprimée');
+        window.location.href = '/taches';
+      });
+    }
+  </script>
+</body>
+</html>
